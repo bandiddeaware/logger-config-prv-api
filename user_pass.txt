@@ -1,0 +1,32 @@
+############## USER 1 ######
+user: user1_dw
+pass: user1_dw
+access_level_id: 1
+is_control: 1
+is_config: 1
+############################
+
+############## USER 2 ######
+user: user10_dw
+pass: user10_dw
+access_level_id: 10
+is_control: 1
+is_config: 0
+############################
+
+
+############## USER 3 ######
+user: user15_dw
+pass: user15_dw
+access_level_id: 15
+is_control: 0
+is_config: 1
+############################
+
+
+mongo --host mongodb0.example.com --port 28015
+
+mongoimport --db pwa_manage_device --collection provinces --authenticationDatabase admin --username admin --password --drop --file ./provinces.json
+
+
+mongo --host localhost -u admin -p --authenticationDatabase admin --port 27017
