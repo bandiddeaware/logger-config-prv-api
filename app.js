@@ -32,8 +32,8 @@ if (!isProduction) {
   app.use(errorhandler());
 }
 
-mongoose.connect('mongodb://admin:deaw1234!@ssmonitors.site:27017/pwa_manage_device', {auth:{authdb:"admin"}});
-// mongoose.connect('mongodb://localhost:27017/pwa_manage_device');
+// mongoose.connect('mongodb://admin:deaw1234!@ssmonitors.site:27017/pwa_manage_device', {auth:{authdb:"admin"}});
+mongoose.connect('mongodb://localhost:27017/pwa_manage_device');
 // mongoose.connect('mongodb://admin:deaw1234!@localhost:27017/pwa_manage_device', {auth:{authdb:"admin"}});
 
 require("./models/Devices")

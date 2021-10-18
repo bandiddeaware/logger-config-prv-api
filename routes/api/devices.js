@@ -65,6 +65,10 @@ router.post('/find', function(req, res, next) {
 });
 
 router.put("/save", function(req, res, next){
+  console.log(req.body)
+  if (req.body.serial_no === undefined){
+    return res.json({});
+  }
   var Devices = new Device();
   Devices.serial_no = req.body.serial_no
   Devices.wwcode = req.body.wwcode
@@ -92,7 +96,9 @@ router.put("/save", function(req, res, next){
   }
   Devices.save().then(function(result){
     return res.json({result: true, data: result})
-  }).catch(next)
+  }).catch((err) => {
+    return res.json({result: false, data: err})
+  })
 })
 
 router.post("/province", function(req, res, next){
@@ -102,6 +108,8 @@ router.post("/province", function(req, res, next){
 })
 
 router.delete("/", function(req, res, next){
+  req.body = req.body.data
+  console.log({serial_no: req.body.serial_no,  serial_no: { $in: req.body.serial_no}})
   Device.remove({serial_no: req.body.serial_no,  serial_no: { $in: req.body.serial_no}}, function(err, response) {
     return res.json(response)
   });
@@ -110,6 +118,10 @@ router.delete("/", function(req, res, next){
 router.post("/update", function(req, res, next){
 
   var update_json = {}
+
+  if (req.body.serial_no_new !== undefined){
+    update_json.serial_no = req.body.serial_no_new
+  }
 
   if (req.body.manual !== undefined){
     update_json.manual = req.body.manual
@@ -147,7 +159,7 @@ router.post("/update", function(req, res, next){
 
   Device.findOneAndUpdate({serial_no: req.body.serial_no}, update_json, {new: false}, (err, doc) => {
     if (err) {
-        return res.json({ret:"fail"});
+        return res.json({result: false});
     }
     if (req.body.manual !== undefined || req.body.prv_config !== undefined || req.body.failure_mode !== undefined){
       var logs = new Log();
@@ -207,10 +219,10 @@ router.post("/update", function(req, res, next){
       }
       logs.time = new Date()
       logs.save().then(function(){
-        return res.json({ret:"OK"})
+        return res.json({result: true})
       }).catch(next)
     } else {
-      return res.json({ret:"OK"})
+      return res.json({result: true})
     }
   });
 })
